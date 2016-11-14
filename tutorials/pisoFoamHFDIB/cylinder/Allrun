@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cp 0.org/* 0/.
+blockMesh
+decomposePar -force
+mpirun -np 4 pisoFoamHFDIB -parallel
+
+
+# ----------------------------------------------------------------- end-of-file
