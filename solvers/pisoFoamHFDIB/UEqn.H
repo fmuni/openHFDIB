@@ -17,7 +17,7 @@ fvOptions.constrain(UEqn);
 
 //if (piso.momentumPredictor())
 //{
-    volScalarField rUA = UEqn.A();
+    volScalarField rUA(UEqn.A());
     rUA.correctBoundaryConditions();
     HFDIB.interpolateIB(U,Ui,lambda);
     f = surface*(rUA*Ui - UEqn.H() +fvc::grad(p) );

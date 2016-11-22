@@ -161,7 +161,7 @@ void immersedBody::calculateInterpolationPoints(volScalarField& body,
   interpolationCells_.clear();
   
   //Create temporary surface normals
-  volVectorField surfNorm = -fvc::grad(body);
+  volVectorField surfNorm(-fvc::grad(body));
      
   for(unsigned int cell=0;cell<surfCells_.size();cell++)
   {
@@ -220,7 +220,7 @@ void immersedBody::rotateImmersedBody()
  //get the angle 
  scalar angle  = omega*mesh_.time().deltaT().value();
  
- pointField bodyPoints = bodySurfMesh_->points();
+ pointField bodyPoints (bodySurfMesh_->points());
  
  //Move points
  forAll(bodyPoints,p)

@@ -10,6 +10,6 @@ EXE_INC = \
 LIB_LIBS = \
     -ltriSurface \
     -lmeshTools \
-    -lblockMesh \
-    -L$(MPI_ARCH_PATH)/lib64 \
-    -lmpi_cxx \
+    -lblockMesh #\
+#    -L$(MPI_ARCH_PATH)/lib64 \
+#    -lmpi_cxx \
