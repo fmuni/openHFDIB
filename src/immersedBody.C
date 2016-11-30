@@ -40,6 +40,7 @@ Contributors
 #include "interpolationCellPoint.H"
 #include "interpolationCell.H"
 #include "meshSearch.H"
+#include "List.H"
 
 #define ORDER 2
 
@@ -109,7 +110,7 @@ void immersedBody::createImmersedBody(volScalarField& body )
  surfCells_.clear();
 
 
- //Fill body field 
+ //Fill body field with first estimation
  forAll(mesh_.C(),cellI)
  {
   //Check if partially or completely inside
@@ -132,6 +133,8 @@ void immersedBody::createImmersedBody(volScalarField& body )
       
  }
  
+ //refine body as stated in the dictionary
+ refineBody(body,&ibTriSurfSearch, & pp);
  calculateInterpolationPoints(body,&ibTriSurfSearch);
 
 }
@@ -184,7 +187,7 @@ void immersedBody::calculateInterpolationPoints(volScalarField& body,
   // Info << "\n intDist: " << intDist << " cellV: " << mesh_.V()[scell];
 
    //Approximate distance using body
-   point surfPoint = mesh_.C()[scell] + intVec*(0.5-body[scell])/2.0;
+   point surfPoint = mesh_.C()[scell] + intVec*(0.5-body[scell]);
    
    //Add to list
    interpolationPoints_[cell].push_back(surfPoint);
@@ -335,5 +338,91 @@ void immersedBody::resetBody(volScalarField& body)
      body[cellI] = 0.0;
      
     }
+ 
+}
+//---------------------------------------------------------------------------//
+//Refine body field for this immersed object using MC-like algorithm
+//Cells are assumed to be hexahedral at the particle surface (but can have different edge length)
+void immersedBody::refineBody(volScalarField& body,   triSurfaceSearch * ibTriSurfSearch, const pointField * pp )
+{
+    if(!immersedDict_.found("refineMC"))
+     return;
+    
+   
+    scalar nPointsEdge = readScalar(immersedDict_.lookup("refineMC"));
+
+    //loop over all the surface cells
+    for(unsigned int cell=0;cell<surfCells_.size();cell++)
+    {
+
+     label cellI = surfCells_[cell];
+     
+     scalar deltaV = 1.0/(nPointsEdge*nPointsEdge*nPointsEdge);
+     
+     //Get cell center
+     point centerC = mesh_.C()[cellI];
+     
+     //Get one node
+     //Check if partially or completely inside
+     const labelList& vertexLabels = mesh_.cellPoints()[cellI];
+     const pointField vertexPoints(*pp,vertexLabels); 
+     point baseNode = vertexPoints[0];
+     
+     //create vector representing 3d diagonal of the cell    
+     vector edgesC = 2*(centerC - baseNode);
+    
+     //create list of points      
+     List<point> pointsMC;
+     
+     //create deltas
+     scalar delta_i = edgesC[0]/nPointsEdge;
+     scalar delta_j = edgesC[1]/nPointsEdge;
+     scalar delta_k = edgesC[2]/nPointsEdge;
+     
+     //add points to list
+     for(int i=0;i<nPointsEdge;i++)
+     {      
+      //point i-coordinate
+      scalar icoord = baseNode[0] + delta_i*(i+0.5); 
+      
+      for(int j=0;j<nPointsEdge;j++)
+      {
+       //point j-coordinate
+       scalar jcoord = baseNode[1] + delta_j*(j+0.5); 
+
+       for(int k=0;k<nPointsEdge;k++)
+       {
+        //point k-coordinate
+        scalar kcoord = baseNode[2] + delta_k*(k+0.5); 
+        
+        //create point
+        point p(icoord,jcoord,kcoord);
+        
+        //add to list
+        pointsMC.append(p);
+        
+       }      
+      }
+     } 
+     
+     //Check who is inside  
+     pointField pField(pointsMC);   
+     boolList pInside = ibTriSurfSearch->calcInside( pField );
+     
+     //Calculate new body
+     scalar newbody = 0.0;
+     forAll(pInside,p)
+     {
+      if(pInside[p])
+       newbody+=deltaV;
+
+      
+     }
+     
+   
+     body[cellI] = newbody;
+     
+    }
+    
  
 }

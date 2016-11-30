@@ -168,8 +168,8 @@ void openHFDIB::interpolateIB(volVectorField & V, volVectorField & Vs, volScalar
     double res_ = mag((*intPoints)[scell][2] -(*intPoints)[scell][1]); 
     
     //cell center to surface distance
-   double ds   = res_*(0.5-body[scell])*0.5 ;
-      
+   double ds   = res_*(0.5-body[cellI ]) ;
+  
     vector quadCoeff = 1/(res_*res_) * ( VP2/2 - VP1 );
     vector linCoeff  = 1/(2*res_) * ( 4*VP1 - VP2 );
    // Info << "\nquadCoeff: " << quadCoeff << " linCoeff: " << linCoeff << " ds: " << ds << " res: " << res_; 
@@ -189,7 +189,7 @@ void openHFDIB::interpolateIB(volVectorField & V, volVectorField & Vs, volScalar
     double res_ = mag((*intPoints)[scell][1] -(*intPoints)[scell][0]); 
     
     //cell center to surface distance
-    double ds   = res_*(0.5-body[scell])*0.5 ;
+    double ds   = res_*(0.5-body[cellI]) ;
       
     vector linCoeff = VP1/res_;
   //  Info << "\n linCoeff: " << linCoeff << " ds: " << ds << " res: " << res_;        

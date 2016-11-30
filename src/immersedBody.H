@@ -102,6 +102,9 @@ namespace Foam
    
    //Reset body field
    void resetBody(volScalarField& body);
+   
+   //Refine body field using MC-like integration
+   void refineBody(volScalarField& body,   triSurfaceSearch * ibTriSurfSearch, const pointField * pp);
   
    
   public:

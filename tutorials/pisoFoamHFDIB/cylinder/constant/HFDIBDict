@@ -26,6 +26,8 @@ sphere
  
  staticBody;
  
+ refineMC 5;
+ 
  U
  {
   BC  noSlip;
