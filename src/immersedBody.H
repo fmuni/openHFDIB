@@ -99,6 +99,9 @@ namespace Foam
    
    //Rotate immersed body
    void rotateImmersedBody();
+   
+   //Reset body field
+   void resetBody(volScalarField& body);
   
    
   public:

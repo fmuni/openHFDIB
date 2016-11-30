@@ -142,8 +142,11 @@ void immersedBody::updateImmersedBody(volScalarField& body )
  //Check Operation to perform
  
  if(bodyOperation_==STATICBODY) return;
- else if(bodyOperation_==ROTATINGBODY) rotateImmersedBody();
-
+ else if(bodyOperation_==ROTATINGBODY)
+ {
+  resetBody(body);
+  rotateImmersedBody();
+ }
  //TODO:Very inefficient find other algorithm
  createImmersedBody(body);
  
@@ -311,4 +314,26 @@ void immersedBody::updateVectoField(volVectorField & VS, word Vname)
   
   }
 
+}
+//---------------------------------------------------------------------------//
+//Reset body field for this immersed object
+void immersedBody::resetBody(volScalarField& body)
+{
+
+   //Simply loop over all the cells and set to zero
+   for(unsigned int cell=0;cell<intCells_.size();cell++)
+    {
+    
+     label cellI = intCells_[cell];
+     body[cellI] = 0.0;
+     
+    }
+
+    for(unsigned int cell=0;cell<surfCells_.size();cell++)
+    {
+     label cellI = surfCells_[cell];
+     body[cellI] = 0.0;
+     
+    }
+ 
 }

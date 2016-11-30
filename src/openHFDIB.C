@@ -89,11 +89,7 @@ void openHFDIB::initialize()
 //---------------------------------------------------------------------------//
 void openHFDIB::update(volScalarField & body)
 {
- //reset body
- forAll(body, cellI)
- {
-  body[cellI] =0.;
- }
+
  for(unsigned int bodyId=0;bodyId<immersedBodies_.size();bodyId++)
   immersedBodies_[bodyId]->updateBodyField(body);
  
