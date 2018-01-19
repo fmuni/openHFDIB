@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd src
+wmake libso
+cd ..
+
+cd solvers/pisoFoamHFDIB
+wmake
+cd ..; cd ..

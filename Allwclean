@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd src
+wclean
+cd ..
+
+cd solvers/pisoFoamHFDIB
+wclean
+cd ..; cd ..

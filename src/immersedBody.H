@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
-                        _   _ ____________ ___________ 
+                        _   _ ____________ ___________
                        | | | ||  ___|  _  \_   _| ___ \     H ybrid
   ___  _ __   ___ _ __ | |_| || |_  | | | | | | | |_/ /     F ictitious
  / _ \| '_ \ / _ \ '_ \|  _  ||  _| | | | | | | | ___ \     D omain
 | (_) | |_) |  __/ | | | | | || |   | |/ / _| |_| |_/ /     I mmersed
  \___/| .__/ \___|_| |_\_| |_/\_|   |___/  \___/\____/      B oundary
-      | |                                              
-      |_|                                              
+      | |
+      |_|
 -------------------------------------------------------------------------------
 License
 
@@ -54,79 +54,127 @@ Contributors
 
 namespace Foam
 {
- enum {STATICBODY , ROTATINGBODY};
- 
+ enum {
+                STATICBODY, //Body does not move
+         TRANSROTATINGBODY, //Trans-rotational imposed motion
+             FLUIDCOUPLING  //Fluid driven motion
+       };
+
  class immersedBody
  {
-  
+
   private:
 
    //first time update?
-   bool                                       isFirstUpdate_; 
-   
+   bool                                       isFirstUpdate_;
+
    //Dictionary
-   dictionary                                  immersedDict_;
-   
+   dictionary&                                  immersedDict_;
+
    //Mesh
    const  fvMesh&                                      mesh_;
-   
+
+   //Dictionary
+   dictionary&                        transportProperties_;
+
+
+   //Body mass
+   scalar M_;
+
+   //Location of center of mass
+   vector CoM_;
+
+   //Rotation axis
+   vector Axis_;
+
+   //Angular velocity
+    scalar omega_;
+
+   //Body velocity
+   vector Vel_;
+
+   //Moment of intertia tensor
+   symmTensor  I_;
+
    //Operation to perform
    int                                        bodyOperation_;
-         
+
    //base geometry
    triSurfaceMesh*                             bodySurfMesh_;
-   
+
    //surface cells
    std::vector< label >                           surfCells_;
-   
+
    //internal cells
    std::vector< label >                            intCells_;
-  
+
    //interpolation points, point[0] is a surface point
    std::vector< std::vector< point > >  interpolationPoints_;
-   
+
    //interpolation cells
    std::vector< std::vector< label > >   interpolationCells_;
-  
+
+
    //Create immersed body info
    void  createImmersedBody( volScalarField& body );
 
    //Update immersed body info
-   void  updateImmersedBody( volScalarField& body );
-   
+   void  updateImmersedBody( volScalarField& body,
+                             volVectorField& f
+                           );
+
    //Create interpolation points
-   void  calculateInterpolationPoints(volScalarField& body,  triSurfaceSearch * ibTriSurfSearch );
-   
+   void  calculateInterpolationPoints(volScalarField& body,
+                                      triSurfaceSearch * ibTriSurfSearch
+                                   );
+
+   //Evaluate center of mass and inertia tensor
+   void calculateGeometricalProperties(volScalarField& body);
+
    //Rotate immersed body
-   void rotateImmersedBody();
-   
+   void moveImmersedBody();
+
    //Reset body field
    void resetBody(volScalarField& body);
-   
-   //Refine body field using MC-like integration
-   void refineBody(volScalarField& body,   triSurfaceSearch * ibTriSurfSearch, const pointField * pp);
-  
-   
-  public:
-   
-   immersedBody(word fileName, const Foam::fvMesh& mesh, dictionary HFDIBDict );
-   ~immersedBody();
-   
-  //Getters
-    
-   const std::vector< label > *     getSurfaceCellList() const {return &surfCells_;};
-   
-   const std::vector< std::vector< point > > * getInterpolationPoints() const {return &interpolationPoints_;};  
-   
-   const std::vector< std::vector< label > > * getInterpolationCells() const {return &interpolationCells_;};  
-   
-   //Update body field
-   void  updateBodyField( volScalarField & body );
-  
-   //Update imposed vector field
-   void updateVectoField(volVectorField & VS, word Vname);
 
-   
+   //Refine body field using MC-like integration
+   void refineBody(volScalarField& body,
+                   triSurfaceSearch * ibTriSurfSearch,
+                   const pointField * pp
+               );
+
+   //Update Fluid-Solid fluid
+   void updateCoupling( volScalarField & body,
+                        volVectorField & f
+                       );
+
+
+  public:
+
+   immersedBody( word fileName,
+                 const Foam::fvMesh& mesh,
+                 dictionary& HFDIBDict,
+                 dictionary& transportProperties
+               );
+
+   ~immersedBody();
+
+  //Getters
+
+   const std::vector< label > *     getSurfaceCellList() const {return &surfCells_;};
+
+   const std::vector< std::vector< point > > * getInterpolationPoints() const {return &interpolationPoints_;};
+
+   const std::vector< std::vector< label > > * getInterpolationCells() const {return &interpolationCells_;};
+
+   //Update body field
+   void updateBodyField( volScalarField & body,
+                         volVectorField & f
+                       );
+
+   //Update imposed vector field
+   void updateVectorField(volVectorField & VS, word Vname);
+
  };
 }
 #endif

@@ -19,7 +19,8 @@ while (piso.correctNonOrthogonal())
 
     fvScalarMatrix pEqn
     (
-        fvm::laplacian(rAU, p) == fvc::div(phiHbyA) + fvc::div(lambda*rAU*f)
+        fvm::laplacian(rAU, p) ==  fvc::div(phiHbyA)
+                                 + fvc::div(lambda*rAU*f)
     );
 
     pEqn.setReference(pRefCell, pRefValue);

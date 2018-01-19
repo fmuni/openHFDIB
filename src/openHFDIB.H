@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
-                        _   _ ____________ ___________ 
+                        _   _ ____________ ___________
                        | | | ||  ___|  _  \_   _| ___ \     H ybrid
   ___  _ __   ___ _ __ | |_| || |_  | | | | | | | |_/ /     F ictitious
  / _ \| '_ \ / _ \ '_ \|  _  ||  _| | | | | | | | ___ \     D omain
 | (_) | |_) |  __/ | | | | | || |   | |/ / _| |_| |_/ /     I mmersed
  \___/| .__/ \___|_| |_\_| |_/\_|   |___/  \___/\____/      B oundary
-      | |                                              
-      |_|                                              
+      | |
+      |_|
 -------------------------------------------------------------------------------
 License
 
@@ -58,32 +58,35 @@ namespace Foam
 
  class openHFDIB
  {
- 
+
   private:
-  
+
    //Basic members
-   const  fvMesh&                 mesh_;
-   IOdictionary              HFDIBDict_;          
-   dictionary          HFDIBinterpDict_;
-     
+   const  fvMesh&                   mesh_;
+   IOdictionary                HFDIBDict_;
+   dictionary            HFDIBinterpDict_;
+   IOdictionary      transportProperties_;
+
    //Immersed bodies objects
    std::vector< immersedBody* >     immersedBodies_; //Container for immersed bodies
-   
-  
+
+
   public:
-   
+
    openHFDIB(const Foam::fvMesh& mesh);
    ~openHFDIB();
- 
+
    void initialize();
-   void update(volScalarField & body);
-   
+   void update(volScalarField & body,
+               volVectorField & f
+           );
+
    //Interpolate vector V using Vs for the surface values
    void interpolateIB(volVectorField& V, volVectorField& Vs, volScalarField& body);
-   
+
    //Interpolate scalar S using Ss for the surface values
    void interpolateIB(volScalarField& S, volScalarField& Ss, volScalarField& body) {};
-   
+
  };
 
 }

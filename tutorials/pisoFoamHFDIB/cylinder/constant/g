@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  3.0.x                                 |
+|  \\    /   O peration     | Version:  5                                     |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -9,33 +9,14 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
+    class       uniformDimensionedVectorField;
     location    "constant";
-    object      HFDIBDict;
+    object      g;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-stlNames ("sphere");
 
-interpolationSchemes
-{
-  U cellPointFace;
-}
+dimensions      [0 1 -2 0 0 0 0];
+value           (0 0  -9.81 );
 
-sphere
-{
-
- staticBody;
- //fluidCoupling;
-
- rho         rho [1 -3 0 0 0 0 0] 5000;
-
- refineMC 5;
-
- U
- {
-  BC  noSlip;
- }
-
-}
 
 // ************************************************************************* //

@@ -78,6 +78,23 @@ scalar pRefValue = 0.0;
 setRefCell(p, piso.dict(), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
 
+#include "readGravitationalAcceleration.H"
+
+ IOdictionary transportProperties
+    (
+        IOobject
+        (
+            "transportProperties",
+            runTime.constant(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+
+  dimensionedScalar rho = dimensionedScalar(
+      transportProperties.lookup("rho")
+  );
 
 singlePhaseTransportModel laminarTransport(U, phi);
 
@@ -85,5 +102,3 @@ autoPtr<incompressible::turbulenceModel> turbulence
 (
     incompressible::turbulenceModel::New(U, phi, laminarTransport)
 );
-
-
