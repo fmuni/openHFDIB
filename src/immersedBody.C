@@ -93,14 +93,14 @@ I_( symmTensor::zero)
      bodyOperation_=TRANSROTATINGBODY;
 
      //Get basic quantities from dict
-     Axis_ = immersedDict_.subDict("rotatingBody").lookup("axis");
-     CoM_  = immersedDict_.subDict("rotatingBody").lookup("center");
+     Axis_ = immersedDict_.subDict("transRotatingBody").lookup("axis");
+     CoM_  = immersedDict_.subDict("transRotatingBody").lookup("center");
 
      omega_  = readScalar(
-                    immersedDict_.subDict("rotatingBody").lookup("omega")
+                    immersedDict_.subDict("transRotatingBody").lookup("omega")
                 );
 
-     Vel_   = immersedDict_.subDict("rotatingBody").lookup("velocity");
+     Vel_   = immersedDict_.subDict("transRotatingBody").lookup("velocity");
 
 
      Info << fileName << " has scripted trans rotational motion." << endl;
@@ -394,7 +394,7 @@ void immersedBody::calculateGeometricalProperties( volScalarField& body )
   CoM_ = tmpCom / M_;
 }
 //---------------------------------------------------------------------------//
-//Rotate immersed body
+//Move immersed body according to body operation
 void immersedBody::moveImmersedBody()
 {
 
