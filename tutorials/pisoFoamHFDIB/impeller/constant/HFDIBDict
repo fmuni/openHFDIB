@@ -24,11 +24,12 @@ interpolationSchemes
 impeller
 {
  
- rotatingBody
+ transRotatingBody
  {
   axis     (0 0 1);
   center   (0 0 0);
-  omega    3.14;
+  omega       3.14;
+  velocity (0 0 0);
  }
  
  U
