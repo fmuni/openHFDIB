@@ -1,5 +1,5 @@
 #!/bin/sh
 
 wmake src
-wmake solvers/pisoFoamHFDIB
+wmake solvers/pisoHFDIBFoam
 wmake solvers/pimpleHFDIBFoam
