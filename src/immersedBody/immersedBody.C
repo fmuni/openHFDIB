@@ -221,10 +221,7 @@ void immersedBody::createImmersedBody(volScalarField& body )
 
         bool bodyCell(false);
         body[cellI] = 0.;
-        
-        label nIn(0);
-        label nOut(0);
-        vector centerIn(vector::zero);
+
         vector centerOut(vector::zero);
 
         forAll(vertexesInside, verIn)
@@ -235,15 +232,7 @@ void immersedBody::createImmersedBody(volScalarField& body )
                 body[cellI] += 1.0/(vertexPoints.size());
                // Info << "Found vertex inside\n";
                 bodyCell = true;
-                
-                centerIn += vertexPoints[verIn];
-                nIn++;
-            }
-            else
-            {
-                centerOut += vertexPoints[verIn];
-                nOut++;
-            }
+             }
             
         }
 
@@ -257,14 +246,7 @@ void immersedBody::createImmersedBody(volScalarField& body )
             else if (body[cellI]>0.1)
             {
                 surfCells_.append(cellI);
-                
-                //- Now evaluate the normal
-                vector surfN((centerOut/max(nOut,1)) - (centerIn/max(nIn,1)));
-                //Info<<"\n mag(surfN)\n";
- /*               surfNorm_.append
-                (
-                    surfN/(mag(surfN)+small)
-                ); */
+
             }   
         }
     }
@@ -719,38 +701,20 @@ void immersedBody::refineBody
         pointField pField(pointsMC);
         boolList pInside = ibTriSurfSearch.calcInside( pField );
 
-        //Calculate new body and new normal
+        //Calculate new body
         scalar newbody = 0.0;
-        label nIn(0);
-        label nOut(0);
-        vector centerIn(vector::zero);
-        vector centerOut(vector::zero);
         
         forAll(pInside,p)
         {
             if(pInside[p])
             {
                 newbody+=deltaV;
-                centerIn += pointsMC[p];
-                nIn++;
-            }
-            else
-            {
-                centerOut += pointsMC[p];
-                nOut++;         
             }
             
         }
 
 
         body[cellI] = newbody;
-        
-        //- Now re-evaluate normal
-        vector surfN( (centerOut/max(nOut,1)) - (centerIn/max(nIn,1)));
-        surfNorm_[cell] =
-        (
-            surfN/(mag(surfN)+small)
-        );
 
     }
 
