@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      HFDIBDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+bodyList ("impeller");
+
+interpolationSchemes
+{
+    U cellPointFace;
+}
+
+impeller
+{
+ 
+    fileName   impeller.stl;
+    
+    rho         rho [1 -3 0 0 0 0 0] 5000;  
+
+    transRotatingBody
+    {
+        axis     (0 0 1);
+        center   (0 0 0);
+        omega       3.14;
+        velocity (0 0 0);
+    }
+ 
+    U
+    {
+        BC  noSlip;
+    }
+
+}
+
+
+// ************************************************************************* //

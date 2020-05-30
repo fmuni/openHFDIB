@@ -1,9 +1,5 @@
 #!/bin/sh
 
-cd src
-wmake libso
-cd ..
-
-cd solvers/pisoFoamHFDIB
-wmake
-cd ..; cd ..
+wmake src
+wmake solvers/pisoFoamHFDIB
+wmake solvers/pimpleHFDIBFoam

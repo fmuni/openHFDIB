@@ -1,0 +1,8 @@
+#!/bin/sh
+
+blockMesh
+decomposePar -force -copyUniform
+mpirun -np 6 pimpleHFDIBFoam -parallel
+
+
+# ----------------------------------------------------------------- end-of-file

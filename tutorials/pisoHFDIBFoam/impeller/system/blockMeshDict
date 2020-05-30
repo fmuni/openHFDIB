@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+xInlet -15;
+xOutlet  15;
+xResolution 60;
+
+ycStart -15;
+ycyclicLength  15; //dp = 2, i.e., 4 diameters per box
+ycyclicResolution 60;
+
+zcStart -5;
+zcyclicLength  10; //dp = 2, i.e., 4 diameters per box
+
+zcyclicResolution 30;
+
+
+
+vertices
+(
+  ($xInlet  $ycStart       $zcStart)
+  ($xOutlet $ycStart       $zcStart)
+  ($xOutlet $ycyclicLength $zcStart)
+  ($xInlet  $ycyclicLength $zcStart)
+  ($xInlet  $ycStart       $zcyclicLength)
+  ($xOutlet $ycStart       $zcyclicLength)
+  ($xOutlet $ycyclicLength $zcyclicLength)
+  ($xInlet  $ycyclicLength $zcyclicLength)
+
+
+);
+
+blocks
+(
+  hex (0 1 2 3 4 5 6 7) ($xResolution $ycyclicResolution $zcyclicResolution) simpleGrading (1 1 1)
+
+);
+
+edges
+(
+);
+
+boundary
+(
+  top
+{
+  type patch;
+
+  faces
+  (
+   (4 5 6 7)
+  );
+}
+
+bottom
+{
+  type patch;
+
+  faces
+  (
+   (0 3 2 1)
+  );
+}
+
+walls
+{
+
+ type wall;
+
+  faces
+  (
+   (2 6 5 1)
+   (0 4 7 3)
+   (3 7 6 2)
+   (1 5 4 0)
+  );
+}
+
+
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

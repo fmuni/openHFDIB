@@ -1,3 +1,4 @@
-immersedBody.C
-openHFDIB.C
+immersedBody/immersedBody.C
+openHFDIB/openHFDIB.C
+
 LIB = $(FOAM_USER_LIBBIN)/libHFDIBM

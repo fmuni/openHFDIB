@@ -1,9 +1,7 @@
 #!/bin/sh
 
-cd src
-wclean
-cd ..
+wclean src
 
-cd solvers/pisoFoamHFDIB
-wclean
-cd ..; cd ..
+wclean solvers/pisoHFDIBFoam
+wclean solvers/pimpleHFDIBFoam
+

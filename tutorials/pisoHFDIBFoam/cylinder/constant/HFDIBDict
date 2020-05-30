@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      HFDIBDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+bodyList ("sphere");
+
+interpolationSchemes
+{
+    U cellPointFace;
+}
+
+sphere
+{
+
+    fileName  sphere.stl;
+
+    staticBody;
+    //fluidCoupling;
+
+    rho         rho [1 -3 0 0 0 0 0] 5000;
+
+    refineMC 5;
+
+    U
+    {
+       BC  noSlip;
+    }
+
+}
+
+// ************************************************************************* //
