@@ -308,9 +308,12 @@ void immersedBody::updateCoupling
 
         F +=  f[cellI] * mesh_.V()[cellI] * rhof.value();
         T +=  ( (mesh_.C()[cellI]-CoM_) ^ f[cellI] )
-                 *mesh_.V()[cellI]* rhof.value();
+                 *mesh_.V()[cellI]* rhof.value();          
 
     }
+    
+    reduce(F, sumOp<vector>());
+    reduce(T, sumOp<vector>());
 
     //Update body linear velocity
     Vel_ += mesh_.time().deltaT().value()
