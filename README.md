@@ -3,6 +3,7 @@ Implementation of the Hybrid Fictitious-Domain/Immersed-Boundary library in Open
 
 References
 ----------
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3940236.svg)](https://doi.org/10.5281/zenodo.3940236)
 
 * https://www.sciencedirect.com/science/article/pii/S0017931016338996
 * https://www.sciencedirect.com/science/article/pii/S0017931017338474
